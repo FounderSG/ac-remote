@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>AC Remote Support</title>
+<style>
+/* Layout: as the privacy page: one reading column under the app's icon; the article opens with a
+   rating-plate of facts (like the label on an air conditioner), then plain headed sections. */
+:root {
+  --bg: #f4f7fb;
+  --plate: #e9eef6;
+  --ink: #0f1a3a;
+  --muted: #55617d;
+  --rule: #d5ddea;
+  --accent: #086a96;
+  --shadow: rgba(10, 18, 48, 0.18);
+  /* System fonts only: a web font would send every visitor's address to its host. */
+  --font-display: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1230; --plate: #131d45; --ink: #e6ecf8; --muted: #9aa8c7;
+    --rule: #26325c; --accent: #4de1ff; --shadow: rgba(0, 0, 0, 0.45);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b1230; --plate: #131d45; --ink: #e6ecf8; --muted: #9aa8c7;
+  --rule: #26325c; --accent: #4de1ff; --shadow: rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 16px/1.7 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: calc(40px + env(safe-area-inset-top, 0px)) calc(64px + env(safe-area-inset-bottom, 0px));
+  margin: 0;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+.wrap { max-width: 40rem; margin: 0 auto; display: grid; gap: 48px; }
+
+.masthead { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 20px; }
+.icon { width: 64px; height: 64px; flex: none; display: block; border-radius: 15px; box-shadow: 0 2px 8px var(--shadow); }
+.masthead-text { display: grid; gap: 2px; min-width: 0; flex: 1 1 12rem; }
+.app-name { margin: 0; font: 600 1.75rem/1.15 var(--font-display); letter-spacing: 0.01em; text-wrap: balance; }
+.app-sub { margin: 0; color: var(--muted); font-size: 0.9375rem; }
+.links { display: flex; gap: 8px; flex-wrap: wrap; }
+.links a {
+  color: var(--accent); text-decoration: none; font-weight: 500; font-size: 0.9375rem;
+  padding: 6px 12px; border: 1px solid var(--rule); border-radius: 999px;
+}
+.links a:hover { border-color: var(--accent); }
+
+article { display: grid; gap: 28px; }
+.title { display: grid; gap: 4px; }
+h2 { margin: 0; font: 600 1.5rem/1.2 var(--font-display); text-wrap: balance; }
+.effective { margin: 0; color: var(--muted); font: 400 0.8125rem/1.5 var(--font-mono); letter-spacing: 0.02em; }
+.intro { margin: 0; }
+
+.plate { background: var(--plate); border: 1px solid var(--rule); border-radius: 10px; padding: 14px 20px 6px; }
+.plate-label {
+  margin: 0 0 6px; color: var(--muted);
+  font: 500 0.75rem/1.4 var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em;
+}
+.plate dl { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+.plate dt, .plate dd { margin: 0; padding: 9px 0; border-top: 1px solid var(--rule); }
+.plate dt { padding-right: 16px; }
+.plate dd { color: var(--accent); font: 500 0.875rem/1.7 var(--font-mono); text-align: right; }
+
+section { display: grid; gap: 10px; }
+h3 { margin: 0; font: 600 1.0625rem/1.4 var(--font-body); }
+section p, section ul, section ol { margin: 0; }
+section ul, section ol { padding-left: 1.25em; display: grid; gap: 4px; }
+section ol { padding-left: 1.5em; }
+b { font-weight: 600; }
+section a { color: var(--accent); }
+.path { font-family: var(--font-mono); font-size: 0.875em; }
+
+.contact { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.contact a { color: var(--accent); font: 500 0.9375rem/1.5 var(--font-mono); overflow-wrap: anywhere; }
+.copy {
+  font: 500 0.8125rem/1 var(--font-body); color: var(--ink); background: transparent;
+  border: 1px solid var(--rule); border-radius: 6px; padding: 7px 10px; cursor: pointer;
+}
+.copy:hover { border-color: var(--accent); }
+
+a:focus-visible, .copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <svg class="icon" viewBox="0 0 1024 1024" role="img" aria-label="AC Remote icon">
+      <defs>
+        <linearGradient id="ic-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1B2E6E"/><stop offset="1" stop-color="#0A1230"/></linearGradient>
+        <radialGradient id="ic-glow" cx="0.66" cy="0.2" r="0.42"><stop offset="0" stop-color="#3BD5FF" stop-opacity="0.35"/><stop offset="1" stop-color="#3BD5FF" stop-opacity="0"/></radialGradient>
+        <linearGradient id="ic-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9D7EA"/></linearGradient>
+        <filter id="ic-sh" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="18" dy="26" stdDeviation="26" flood-color="#000814" flood-opacity="0.55"/></filter>
+      </defs>
+      <rect width="1024" height="1024" fill="url(#ic-bg)"/>
+      <rect width="1024" height="1024" fill="url(#ic-glow)"/>
+      <g transform="rotate(15 512 600)">
+        <g fill="none" stroke="#4DE1FF" stroke-linecap="round" stroke-width="34">
+          <path d="M444.8 327.8A95 95 0 0 1 579.2 327.8"/>
+          <path d="M395.3 278.3A165 165 0 0 1 628.7 278.3" stroke-opacity="0.7"/>
+          <path d="M345.8 228.8A235 235 0 0 1 678.2 228.8" stroke-opacity="0.42"/>
+        </g>
+        <rect x="332" y="400" width="360" height="760" rx="130" fill="url(#ic-body)" filter="url(#ic-sh)"/>
+        <rect x="472" y="418" width="80" height="22" rx="11" fill="#1A2550"/>
+        <rect x="377" y="470" width="270" height="180" rx="40" fill="#0E1A3A"/>
+        <path d="M512 560L512 502M512 528.1L524.3 515.8M512 528.1L499.7 515.8M512 560L562.2 531M539.6 544L556.4 548.6M539.6 544L544.1 527.2M512 560L562.2 589M539.6 576L544.1 592.8M539.6 576L556.4 571.4M512 560L512 618M512 591.9L499.7 604.2M512 591.9L524.3 604.2M512 560L461.8 589M484.4 576L467.6 571.4M484.4 576L479.9 592.8M512 560L461.8 531M484.4 544L479.9 527.2M484.4 544L467.6 548.6" fill="none" stroke="#6FE6FF" stroke-width="15" stroke-linecap="round"/>
+        <circle cx="512" cy="752" r="58" fill="#FF6B4A"/>
+        <path d="M528.1 736.8A25 25 0 1 1 495.9 736.8M512 723V752" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"/>
+        <circle cx="422" cy="882" r="46" fill="#CBD7E8"/>
+        <circle cx="602" cy="882" r="46" fill="#CBD7E8"/>
+        <path d="M400 882H444M580 882H624M602 860V904" stroke="#33416A" stroke-width="10" stroke-linecap="round"/>
+        <rect x="377" y="975" width="110" height="44" rx="22" fill="#CBD7E8"/>
+        <rect x="537" y="975" width="110" height="44" rx="22" fill="#CBD7E8"/>
+      </g>
+    </svg>
+    <div class="masthead-text">
+      <p class="app-name">AC Remote</p>
+      <p class="app-sub">Support</p>
+    </div>
+    <nav class="links" aria-label="Related pages">
+      <a href="../privacy/">Privacy Policy</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <article>
+      <div class="title">
+        <h2>Support</h2>
+      </div>
+      <p class="intro">AC Remote is an air conditioner remote control for iPhone and iPad. It sends infrared signals through an IR transmitter plugged into the headphone output. This page covers what you need, how to add an air conditioner, and what to try when it does not answer.</p>
+
+      <div class="plate">
+        <p class="plate-label">At a glance</p>
+        <dl>
+          <dt>Devices</dt><dd>iPhone, iPad</dd>
+          <dt>System</dt><dd>iOS 17 or later</dd>
+          <dt>Needs</dt><dd>Headphone IR transmitter</dd>
+          <dt>Internet or account</dt><dd>Not needed</dd>
+        </dl>
+      </div>
+
+      <section>
+        <h3>What you need</h3>
+        <p>An IR transmitter that plugs into the headphone output: a small infrared emitter on a 3.5&nbsp;mm plug, driven by the sound the app plays. On an iPhone or iPad without a headphone jack, plug it into a Lightning or USB-C to 3.5&nbsp;mm headphone adapter. Bluetooth and Wi-Fi IR blasters do not work with the app.</p>
+      </section>
+
+      <section>
+        <h3>Adding an air conditioner</h3>
+        <ol>
+          <li>Plug in the IR transmitter.</li>
+          <li>In the list of air conditioners, tap <b>+</b> and choose the brand. You can search for it by name.</li>
+          <li>Point the transmitter at the air conditioner from close by, and press the power key of each remote in the list, one after another, until the air conditioner answers.</li>
+          <li>Tap <b>Choose</b> on the remote it answered. Choose appears once you have pressed that remote's power key. Tap a remote to see all its models.</li>
+        </ol>
+        <p>Some remotes have a single power key that turns the air conditioner on and off in turn. With these, each press switches it, as the remote's key does, and the app cannot know whether it is on or off.</p>
+      </section>
+
+      <section>
+        <h3>Using the panel</h3>
+        <ul>
+          <li>Each change you make on the panel is sent to the air conditioner. The bar at the bottom shows when the last one was sent. <b>Resend</b> sends the settings again, for example when the air conditioner did not hear them.</li>
+          <li>Some remotes send nothing while the air conditioner is off. The settings you change then go out when you turn it on, as the bar says.</li>
+          <li>The panel shows what the app sent last. It does not see changes made with the air conditioner's own remote control.</li>
+          <li>The <b>More</b> menu at the top right renames the air conditioner, sets its temperature unit, resets its settings and deletes it.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Holding an iPhone upside down</h3>
+        <p>The transmitter plugs into the bottom of the iPhone, so the screen is upside down when you point it at the air conditioner. Tap the up-and-down arrows at the top right (<b>Turn upside down</b>) to turn the app's screen around, and tap them again to turn it upright. The app remembers your choice. An iPad turns its screen around by itself, so it has no such button.</p>
+      </section>
+
+      <section>
+        <h3>When the air conditioner does not answer</h3>
+        <ul>
+          <li>Check that the transmitter is plugged in all the way. If the app says no IR transmitter is plugged in although it is, the sound is going somewhere else, such as Bluetooth headphones, a car or an AirPlay speaker: choose the headphones as the output in Control Center, or disconnect the other device.</li>
+          <li>The app turns the volume up to full before each send. If it says a command was sent below full volume, a volume limit is holding it back: turn the limit off under <span class="path">Settings › Sounds &amp; Haptics › Headphone Safety</span>.</li>
+          <li>Point the transmitter at the air conditioner's receiver, usually behind a small dark window on the indoor unit, from close by. Infrared light does not pass through walls.</li>
+          <li>If it answers some commands but not others, another remote of the same brand may fit it better: add it again and try more of the remotes in the list.</li>
+          <li>At the end of a brand's list, <b>Not supported yet</b> names models whose codes the app cannot send yet. If the air conditioner answers none of the remotes and its model is there, the app cannot control it yet.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Your data</h3>
+        <p>Everything the app keeps stays on your device. See the <a href="../privacy/">Privacy Policy</a>.</p>
+      </section>
+
+      <section>
+        <h3>Contact</h3>
+        <p>For questions, problems, feedback and requests, such as an air conditioner the app cannot control yet, write to:</p>
+        <div class="contact">
+          <a id="email" href="mailto:founder.fang@gmail.com">founder.fang@gmail.com</a>
+          <button type="button" class="copy" id="copy">Copy</button>
+        </div>
+        <p>It helps to say which iPhone or iPad you use, the brand and model of the air conditioner, and the model of its remote control if you know it.</p>
+      </section>
+    </article>
+  </main>
+</div>
+
+<script>
+var button = document.getElementById("copy");
+var address = document.getElementById("email");
+button.addEventListener("click", function () {
+  function show(text) {
+    button.textContent = text;
+    setTimeout(function () { button.textContent = "Copy"; }, 1600);
+  }
+  function selectAddress() {
+    var range = document.createRange();
+    range.selectNodeContents(address);
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    show("Selected");
+  }
+  try {
+    navigator.clipboard.writeText(address.textContent).then(function () {
+      show("Copied");
+    }, selectAddress);
+  } catch (e) {
+    selectAddress();
+  }
+});
+</script>
+</body>
+</html>
